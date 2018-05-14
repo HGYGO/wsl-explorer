@@ -1,0 +1,32 @@
+#!/bin/bash
+
+isfile=0
+
+if [ "$1"x == x ]; then
+	echo "Open pwd"
+	dir=$(pwd -P)
+elif [ -d $1 ]; then
+	dir=$(cd $(dirname $1); pwd -P)
+	echo "Open $dir"
+elif [ -f $1 ]; then
+	dir=$(cd $(dirname $1); pwd -P)/$(basename $1)
+	isfile=1
+else
+	echo "Invalid parameters, exit 1"
+	exit 1
+fi
+
+echo "dir: $dir"
+dir=${dir/\/mnt\//}
+dir=${dir/\//:/}
+
+echo $dir
+dir=${dir//\//\\}
+echo $dir
+
+if [ ${isfile}x == 1x ]; then
+	explorer.exe /e,/select,${dir}
+else
+	explorer.exe /e,/root,${dir}
+fi
+#${test//\//\\\\}
